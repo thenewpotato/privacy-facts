@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 .confidence{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.github-link{font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}.github-link:hover{text-decoration:underline}
 .try{flex-wrap:wrap}
 .conditional{background:#f4e7c9;color:#75551c}
 .fact-group h2{font-size:12px;font-weight:800;margin:0;padding:12px 0 6px;border-bottom:2px solid #171b16}.fact.nested{margin-left:18px}.fact.nested summary{font-weight:400}.fact.nested summary>span:first-child::before{content:'↳ ';color:#74816b}.fact-group .value{flex-shrink:0}.fact-group+.fact-group{margin-top:4px}
