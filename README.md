@@ -101,6 +101,38 @@ For hosted Pages, configure `TYPESAFE_API_KEY` as a secret and optionally set `T
 
 There is deliberately no application rate limiter. Provider/platform quotas still apply, and public requests consume the operator's TypeSafe credits. Deploy only with that cost exposure understood.
 
+## Optional analysis analytics (Cloudflare)
+
+Analytics is off by default. Operators can attach an Analytics Engine dataset
+binding named `ANALYSIS_ANALYTICS` to enable one event per valid analysis
+submission. Without that binding, the handler performs no analytics work.
+The Node/Express adapter is unchanged and does not send these events.
+
+Each event contains only a normalized public domain (or `pasted_text`), input
+type (`url` or `text`), outcome (`success` or `failure`), and count of one.
+Cloudflare adds a timestamp. Subdomains, paths, query strings, credentials,
+policy text, results, raw errors, IP addresses, and visitor IDs are not included.
+Private hosting tenants are grouped under their platform, e.g. `alice.github.io`
+becomes `github.io`. IP literals and unknown suffixes are excluded. Domains can
+still be sensitive; this is minimized telemetry, not guaranteed anonymity.
+
+Counts represent submissions, not unique people. Invalid/oversized request bodies
+are excluded; valid submissions that fail analysis count as failures. Analytics
+errors never change the API response. Existing hosting logs and the policy text
+sent to TypeSafe for analysis are separate from this optional instrumentation.
+
+Configure dataset names and reporting in your deployment project, not in this
+library. Keep preview and production datasets separate. Event schema:
+`blob1=domain`, `blob2=input type`, `blob3=outcome`, `double1=1`;
+the sampling index is the normalized domain, capped at 96 ASCII characters.
+Use `SUM(_sample_interval * double1)` for sampling-weighted counts.
+Analytics Engine retains events for three months and may sample them; it does
+not store only daily counters. Tests mock the binding; verify ingestion on a
+preview deployment before enabling production analytics.
+
+See [Pages bindings](https://developers.cloudflare.com/pages/functions/bindings/#analytics-engine)
+and [Analytics Engine limits](https://developers.cloudflare.com/analytics/analytics-engine/limits/).
+
 ## License
 
 The project code is licensed under the [MIT License](LICENSE). Third-party assets retain their own licenses.
