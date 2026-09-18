@@ -80,8 +80,12 @@ Before public hosting:
 
 Built-in limits allow six attempts per minute per socket IP and four concurrent analyses per process; they are in-memory and not shared across instances. The fetcher rejects private/reserved addresses, checks redirects, and pins validated DNS addresses when connecting. These safeguards do not replace production security review.
 
-## Disclaimer
+## License
+
+The project code is licensed under the [MIT License](LICENSE), copyright 2026 Tiger Wang. Third-party assets retain their own licenses.
 
 The lock icon is from [Twemoji](https://github.com/jdecked/twemoji), copyright Twitter, Inc. and other contributors, used under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The artwork is unmodified.
+
+## Disclaimer
 
 Made for funsies. AI can get things wrong. This is not legal advice; read the original policy before making decisions.
