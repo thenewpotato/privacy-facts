@@ -5,3 +5,8 @@ dist/
 !.env.example
 .DS_Store
 test-results/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.cloudflare-build/
+.cloudflare-site/
