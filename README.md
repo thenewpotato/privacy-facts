@@ -74,11 +74,32 @@ Production serves the built frontend and API at `/privacy-facts/`, bound to `127
 Before public hosting:
 
 - Keep secrets server-side and API responses uncached.
-- Add edge-level abuse protection and paid-API spending controls.
-- Configure limits for your proxy topology: the built-in limiter uses socket IPs, not forwarded headers, so proxied users may share a limit.
+- Monitor paid-API usage: neither backend imposes application-level rate or concurrency limits.
 - Use production mode, not the Vite development server.
 
-Built-in limits allow six attempts per minute per socket IP and four concurrent analyses per process; they are in-memory and not shared across instances. The fetcher rejects private/reserved addresses, checks redirects, and pins validated DNS addresses when connecting. These safeguards do not replace production security review.
+The Node fetcher rejects private/reserved addresses, checks redirects, and pins validated DNS addresses when connecting. Timeouts and input-size limits apply in both runtimes.
+
+## Cloudflare Pages backend
+
+The same frontend can run with Pages Functions instead of Express. Both adapters use shared extraction, Jev classification, and response formatting. No frontend URL switch is needed:
+
+- `POST /privacy-facts/api/analyze` accepts `{ "url": "https://example.com/privacy" }` or `{ "text": "..." }`.
+- `GET /privacy-facts/api/health` reports whether the API key is configured.
+
+```sh
+npm run build:pages
+npm run check:pages
+# Put TYPESAFE_API_KEY in a local .dev.vars file (gitignored).
+npm run dev:pages
+```
+
+Open `http://localhost:8788/privacy-facts/`. The staged `.cloudflare-site` directory contains assets at the correct URL prefix; `functions/` contains the API routes. `wrangler.jsonc` is for this standalone project, not an existing personal-site deployment. Integration with another Pages project requires including the staged assets, function entrypoints, and their shared modules in that project's build.
+
+For hosted Pages, configure `TYPESAFE_API_KEY` as a secret and optionally set `TYPESAFE_MODEL`. No account IDs or secrets are in the configuration. These commands build and preview locally; they do not deploy.
+
+**Cloudflare fetch security:** arbitrary public hostnames are supported, with no approved-host list. Each redirect is checked and A/AAAA records are validated using Cloudflare DNS-over-HTTPS before fetching. No caller cookies or authorization headers are forwarded. However, Workers `fetch` resolves DNS again and cannot pin the checked address like the Node adapter. This leaves a DNS-rebinding check/use gap; do not treat it as equivalent SSRF protection or bind this fetch path to a private network. IP-literal URLs can also be rejected by the Workers runtime even when public. Pasting policy text remains available.
+
+There is deliberately no application rate limiter. Provider/platform quotas still apply, and public requests consume the operator's TypeSafe credits. Deploy only with that cost exposure understood.
 
 ## License
 
