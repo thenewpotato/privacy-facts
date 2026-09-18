@@ -82,7 +82,7 @@ Built-in limits allow six attempts per minute per socket IP and four concurrent 
 
 ## License
 
-The project code is licensed under the [MIT License](LICENSE), copyright 2026 Tiger Wang. Third-party assets retain their own licenses.
+The project code is licensed under the [MIT License](LICENSE). Third-party assets retain their own licenses.
 
 The lock icon is from [Twemoji](https://github.com/jdecked/twemoji), copyright Twitter, Inc. and other contributors, used under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The artwork is unmodified.
 
